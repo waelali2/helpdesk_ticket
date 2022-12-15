@@ -13,6 +13,6 @@
     "auto_install": False,
 
     'data': [
-
+        'views/ticket_view.xml'
     ],
 }
