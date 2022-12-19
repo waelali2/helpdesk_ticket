@@ -6,8 +6,14 @@
             <field name="model_id" ref="helpdesk.model_helpdesk_ticket"/>
             <field name="subject">{{ object.display_name }}</field>
             <field name="email_from">{{ (object.user_id.email_formatted or user.email_formatted) }}</field>
-            <field name="email_to">{{ (object.partner_email if not object.sudo().partner_id.email or object.sudo().partner_id.email != object.partner_email else '') }}</field>
-            <field name="partner_to">{{ object.user_id.partner_id.id }},{{ object.partner_id.id if object.sudo().partner_id.email and object.sudo().partner_id.email == object.partner_email else '' }}</field>
+            <!-- <field name="email_to">{{ (object.partner_email if not object.sudo().partner_id.email or object.sudo().partner_id.email != object.partner_email else '') }}</field> -->
+             <!-- <field name="email_to">{{ user.email_formatted }}</field> -->
+            <field name="email_to">{{object.sale_managers.email}}</field>
+            <!-- <field name="partner_to">{{ object.sale_managers.partner_id.id or object.partner_id.id }}</field> -->
+
+            <!-- <field name="partner_to">{{ object.user_id.partner_id.id }},{{ object.partner_id.id if object.sudo().partner_id.email and object.sudo().partner_id.email == object.partner_email else '' }}</field> -->
+            <!-- <field name="partner_to">{{','.join([str(partner.id) for partner in object.team_id.member_ids.mapped('partner_id')])}}</field> -->
+
 
             <field name="body_html" type="html">
                 <div>

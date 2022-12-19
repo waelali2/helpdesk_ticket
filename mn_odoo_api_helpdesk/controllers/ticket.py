@@ -16,29 +16,27 @@ class Ticket(http.Controller):
         return data
 
 
-    @http.route('/create_ticket', type='json', auth='user')
-    def create_ticket(self, **rec):
-        if request.jsonrequest:
-            print("rec", rec)
-            if rec["name"]:
-                vals = {
-                    'name': rec['name'],
-                    'team_id': rec['team_id']
-                }
+    # @http.route('/create_ticket', type='json', auth='user')
+    # def create_ticket(self, **rec):
+    #     if request.jsonrequest:
+    #         print("rec", rec)
+    #         if rec["name"]:
+    #             vals = {
+    #                 'name': rec['name'],
+    #                 'team_id': rec['team_id']
+    #             }
                 
-                new_ticket = request.env['helpdesk.ticket'].sudo().create(vals)
-                args = {
-                    'success': True,
-                    'ID': new_ticket.id
-                }
-                email_values = {
-                    'recipient_ids': new_ticket.env.user.partner_id,
-                    'email_from': new_ticket.env.user.email
-                                }
-                # mail_template = new_ticket.env.ref('helpdesk.new_ticket_request_email_template')
-                mail_template = new_ticket.env.ref('mn_odoo_api_helpdesk.mn_new_template')
-                mail_template.send_mail(new_ticket.id, email_values=email_values, force_send=True)
-        return args
+    #             new_ticket = request.env['helpdesk.ticket'].sudo().create(vals)
+    #             args = {
+    #                 'success': True,
+    #                 'ID': new_ticket.id,
+    #                 'sale_managers' :
+    #             }
+               
+    #             # mail_template = new_ticket.env.ref('helpdesk.new_ticket_request_email_template')
+    #             mail_template = new_ticket.env.ref('mn_odoo_api_helpdesk.mn_new_template')
+    #             mail_template.send_mail(new_ticket.id, force_send=True)
+    #     return args
 
 
     @http.route('/web/session/authenticate', type='json', auth="none")
@@ -58,5 +56,47 @@ class Ticket(http.Controller):
         #     uid = request.session.authenticate(db, login, password)
         #     session_info = request.env['ir.http'].session_info()
         #     return session_info
+
+
+    
+    @http.route('/create_ticket', type='json', auth='user')
+    def create_ticket(self, **rec):
+
+        if request.jsonrequest:
+            sales_managers = []
+        
+            vals = {
+                'name': rec['name'],
+                'team_id': rec['team_id']
+            }
+                
+            new_ticket = request.env['helpdesk.ticket'].sudo().create(vals)
+            sales_team = request.env.ref('sales_team.group_sale_manager').users
             
-       
+            for user in sales_team.ids:
+                teams = request.env['res.users'].sudo().search([('id','=',user)])
+                for team in teams:
+                    managers = {
+                        "id":team.id,
+                        "name":team.name
+                    }
+                    sales_managers.append(managers)
+                    email_values = {
+                    'email_to': team.email,
+                    'email_cc': False,
+                    'auto_delete': True,
+                    'recipient_ids': [],
+                    'partner_ids': [],
+                    'scheduled_date': False,
+                    }
+                new_ticket.env.ref('helpdesk.new_ticket_request_email_template')
+                mail_template = new_ticket.env.ref('mn_odoo_api_helpdesk.mn_new_template')
+                mail_template.send_mail(new_ticket.id, force_send=True, email_values=email_values)
+
+            args = {
+                'success': True,
+                'ID': new_ticket.id,
+                'sale_managers' : sales_managers
+            }
+        
+            return args

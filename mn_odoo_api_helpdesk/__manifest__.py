@@ -13,6 +13,7 @@
     "auto_install": False,
 
     'data': [
-        'views/ticket_view.xml'
+        'views/ticket_view.xml',
+        'views/sale_manager_view.xml'
     ],
 }
