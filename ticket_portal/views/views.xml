@@ -20,7 +20,16 @@
 					</thead>
 					<t t-foreach="tickets" t-as="ticket">
 						<tr>
-						  <td><a t-attf-href="/helpdesk/ticket/#{ticket.id}"><span t-field="ticket.name"/></a></td><td/>
+						  <th><a t-attf-href="/helpdesk/ticket/#{ticket.id}"><span t-field="ticket.name"/></a></th>
+						  
+							<th><a t-attf-href="/helpdesk/ticket/#{ticket.id}">
+									<span t-field="ticket.team_id"/>
+								</a> </th>
+
+							<th><a t-attf-href="/helpdesk/ticket/#{ticket.id}">
+								<span t-field="ticket.company_id"/>
+							</a> </th>
+							
 
 							
 						</tr>
