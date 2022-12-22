@@ -15,4 +15,9 @@
     'data': [
         'views/views.xml'
     ],
+    'assets': {
+        'web.assets_backend': [
+            'ticket_portal/static/src/ticket_delete_script.js',
+        ]
+    }
 }

@@ -16,6 +16,8 @@
 							<th class="text-left">Name</th>
 							<th class="text-left">Helpdesk Team</th>
 							<th class="text-left">Company </th>
+							<th class="text-left">Action</th>
+
 						</tr>
 					</thead>
 					<t t-foreach="tickets" t-as="ticket">
@@ -29,11 +31,16 @@
 							<th><a t-attf-href="/helpdesk/ticket/#{ticket.id}">
 								<span t-field="ticket.company_id"/>
 							</a> </th>
-							
+							<th>
+								<!-- <form action="/delete_ticketss/#{ticket.id}" method="delete">
+									<button type="submit" class="btn">Delete</button>
+								</form>	-->
+								<!-- <button name="delete_ticket" type="object" string="Delete Ticket"/> -->
+								<button t-if="ticket" t-att-data-id="ticket.id" name="delete_ticket" class="btn btn-danger btn-delete" type="object">Delete Ticket</button>
 
-							
+							</th>
 						</tr>
-					</t>
+					</t>	
 				</t>
 			</t>
 	</template>

@@ -19,10 +19,15 @@ class Tickets(http.Controller):
         partner = request.env.user.partner_id
         ticketa = http.request.env['helpdesk.ticket'].search([('partner_id', '=', request.env.user.partner_id.id)])
         return http.request.render("ticket_portal.tickets_custom", {'tickets': ticketa, 'page_name': 'tickets_list'})
+    
+    
+    @http.route('/delete_ticketss', type='http', auth='user', website=True, sitemap=False)
+    def delete_ticketss(self, ticket_id, **kw ):
+        ticket = self.env['helpdesk.ticket'].browse(ticket_id)
+        ticket.unlink()
+        return http.request.render('/my/ticketsss')
 
 
-
-      
-
+    
         
        
